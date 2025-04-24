@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Music App</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Roboto', sans-serif;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 15px;
+            margin-bottom: 20px;
+        }
+        .button {
+            width: 100px;
+            height: 100px;
+            background-color: #f8d7da;
+            border: none;
+            border-radius: 10px;
+            color: #333333;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #f1c0c3;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .controls, .progression, .sequence, .instrument-select, .chord-types {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .controls label, .progression label, .instrument-select label {
+            margin-right: 10px;
+        }
+        .controls select, .progression select, .instrument-select select {
+            margin-right: 20px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            color: #333333;
+        }
+        .sequence ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sequence li {
+            display: inline;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #e2e3e5;
+            color: #333333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #d6d8db;
+        }
+        .chord-types {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .chord-button {
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            background-color: #3a3a3a;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .chord-button:hover {
+            background-color: #4a4a4a;
+        }
+        .instrument-select {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .instrument-select label {
+            margin-right: 10px;
+        }
+        .instrument-select select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #2e2e2e;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="key-select">キー:</label>
+        <select id="key-select">
+            <option value="C">C</option>
+            <option value="C#">C#</option>
+            <option value="D">D</option>
+            <option value="D#">D#</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="G">G</option>
+            <option value="G#">G#</option>
+            <option value="A">A</option>
+            <option value="A#">A#</option>
+            <option value="B">B</option>
+        </select>
+
+        <label for="mode-select">コードタイプ:</label>
+        <select id="mode-select">
+            <option value="major">メジャー</option>
+            <option value="minor">マイナー</option>
+            <option value="sus9">sus9</option>
+            <option value="maj7">maj7</option>
+            <option value="min7">min7</option>
+            <option value="dom7">7</option>
+        </select>
+    </div>
+    <div class="grid">
+        <button class="button">C</button>
+        <button class="button">D</button>
+        <button class="button">E</button>
+        <button class="button">F</button>
+        <button class="button">G</button>
+        <button class="button">A</button>
+        <button class="button">B</button>
+        <button class="button">C</button>
+    </div>
+    <div class="progression">
+        <label for="progression-select">コード進行:</label>
+        <select id="progression-select">
+            <option value="C">C</option>
+            <option value="C7">C7</option>
+            <option value="D">D</option>
+            <option value="Dm">Dm</option>
+            <option value="E">E</option>
+            <option value="Em">Em</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="G7">G7</option>
+            <option value="A">A</option>
+            <option value="Am">Am</option>
+            <option value="B">B</option>
+        </select>
+        <button id="add-to-sequence">追加</button>
+    </div>
+
+    <div class="sequence">
+        <h3>選択されたコード進行:</h3>
+        <ul id="sequence-list"></ul>
+        <button id="play-sequence">再生</button>
+        <button id="clear-sequence">クリア</button>
+    </div>
+    <div class="chord-types">
+        <button class="chord-button" data-chord="major">メジャー</button>
+        <button class="chord-button" data-chord="minor">マイナー</button>
+        <button class="chord-button" data-chord="sus9">sus9</button>
+        <button class="chord-button" data-chord="maj7">maj7</button>
+        <button class="chord-button" data-chord="min7">min7</button>
+        <button class="chord-button" data-chord="dom7">7</button>
+        <button class="chord-button" data-chord="m7">m7</button>
+    </div>
+    <div class="instrument-select">
+        <label for="instrument">音色:</label>
+        <select id="instrument">
+            <option value="piano">ピアノ</option>
+            <option value="guitar">ギター</option>
+            <option value="organ">パイプオルガン</option>
+            <option value="vibraphone">ビブラフォン</option>
+        </select>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
